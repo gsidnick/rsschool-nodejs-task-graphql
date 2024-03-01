@@ -1,5 +1,5 @@
 import { GraphQLNonNull, GraphQLObjectType, GraphQLString } from 'graphql';
-import { UUIDType } from '../types/uuid.js';
+import { UUIDType } from '../../types/uuid.js';
 
 export const postType = new GraphQLObjectType({
   name: 'Post',

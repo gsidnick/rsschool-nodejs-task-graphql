@@ -5,9 +5,9 @@ import {
   GraphQLObjectType,
   GraphQLString,
 } from 'graphql';
-import { UUIDType } from './uuid.js';
-import { profileType } from './profile.js';
-import { postType } from './post.js';
+import { UUIDType } from '../../types/uuid.js';
+import { profileType } from '../profiles/profile-type.js';
+import { postType } from '../posts/post-type.js';
 
 export const userType = new GraphQLObjectType({
   name: 'User',
