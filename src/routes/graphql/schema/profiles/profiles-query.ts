@@ -22,7 +22,9 @@ export const profile = {
         id,
       },
     });
-
+    if (profile === null) {
+      return null;
+    }
     return profile;
   },
 };

@@ -22,7 +22,9 @@ export const user = {
         id,
       },
     });
-
+    if (user === null) {
+      return null;
+    }
     return user;
   },
 };

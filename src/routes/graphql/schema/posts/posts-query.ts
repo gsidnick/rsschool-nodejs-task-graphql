@@ -22,7 +22,9 @@ export const post = {
         id,
       },
     });
-
+    if (post === null) {
+      return null;
+    }
     return post;
   },
 };

@@ -21,7 +21,9 @@ export const memberType = {
         id,
       },
     });
-
+    if (memberType === null) {
+      return null;
+    }
     return memberType;
   },
 };
