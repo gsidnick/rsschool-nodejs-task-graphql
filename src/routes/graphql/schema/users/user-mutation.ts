@@ -1,6 +1,6 @@
 import { FastifyInstance } from 'fastify';
 import { GraphQLBoolean, GraphQLNonNull } from 'graphql';
-import { dtoUser, newUserInputType, userType } from './user-type.js';
+import { changeUserInput, dtoUser, newUserInputType, userType } from './user-type.js';
 import { UUIDType } from '../../types/uuid.js';
 
 export const createUser = {
@@ -29,5 +29,27 @@ export const deleteUser = {
       },
     });
     return null;
+  },
+};
+
+export const changeUser = {
+  type: userType,
+  args: {
+    id: {
+      type: new GraphQLNonNull(UUIDType),
+    },
+    dto: {
+      type: new GraphQLNonNull(changeUserInput),
+    },
+  },
+  resolve: async (
+    _,
+    { id, dto }: { id: string; dto: Partial<dtoUser> },
+    context: FastifyInstance,
+  ) => {
+    return await context.prisma.user.update({
+      where: { id },
+      data: { ...dto },
+    });
   },
 };

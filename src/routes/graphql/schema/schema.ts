@@ -3,9 +3,13 @@ import { memberTypes, memberType } from './member-types/member-types-query.js';
 import { posts, post } from './posts/posts-query.js';
 import { users, user } from './users/users-query.js';
 import { profiles, profile } from './profiles/profiles-query.js';
-import { createPost, deletePost } from './posts/post-mutation.js';
-import { createUser, deleteUser } from './users/user-mutation.js';
-import { createProfile, deleteProfile } from './profiles/profile-mutation.js';
+import { createPost, deletePost, changePost } from './posts/post-mutation.js';
+import { createUser, deleteUser, changeUser } from './users/user-mutation.js';
+import {
+  createProfile,
+  deleteProfile,
+  changeProfile,
+} from './profiles/profile-mutation.js';
 
 const rootQuery = new GraphQLObjectType({
   name: 'Query',
@@ -30,6 +34,9 @@ const rootMutation = new GraphQLObjectType({
     deleteUser,
     deletePost,
     deleteProfile,
+    changeUser,
+    changePost,
+    changeProfile,
   },
 });
 
