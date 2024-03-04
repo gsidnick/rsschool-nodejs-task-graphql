@@ -1,5 +1,6 @@
 import {
   GraphQLFloat,
+  GraphQLInputObjectType,
   GraphQLList,
   GraphQLNonNull,
   GraphQLObjectType,
@@ -9,6 +10,11 @@ import { UUIDType } from '../../types/uuid.js';
 import { profileType } from '../profiles/profile-type.js';
 import { postType } from '../posts/post-type.js';
 import { FastifyInstance } from 'fastify';
+
+export interface dtoUser {
+  name: string;
+  balance: number;
+}
 
 export const userType = new GraphQLObjectType({
   name: 'User',
@@ -79,4 +85,16 @@ export const userType = new GraphQLObjectType({
       },
     },
   }),
+});
+
+export const newUserInputType = new GraphQLInputObjectType({
+  name: 'CreateUserInput',
+  fields: {
+    name: {
+      type: new GraphQLNonNull(GraphQLString),
+    },
+    balance: {
+      type: new GraphQLNonNull(GraphQLFloat),
+    },
+  },
 });

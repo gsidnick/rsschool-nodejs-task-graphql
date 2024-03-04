@@ -3,6 +3,9 @@ import { memberTypes, memberType } from './member-types/member-types-query.js';
 import { posts, post } from './posts/posts-query.js';
 import { users, user } from './users/users-query.js';
 import { profiles, profile } from './profiles/profiles-query.js';
+import { createPost } from './posts/post-mutation.js';
+import { createUser } from './users/user-mutation.js';
+import { createProfile } from './profiles/profile-mutation.js';
 
 const rootQuery = new GraphQLObjectType({
   name: 'Query',
@@ -18,4 +21,13 @@ const rootQuery = new GraphQLObjectType({
   },
 });
 
-export default new GraphQLSchema({ query: rootQuery });
+const rootMutation = new GraphQLObjectType({
+  name: 'Mutation',
+  fields: {
+    createUser,
+    createPost,
+    createProfile,
+  },
+});
+
+export default new GraphQLSchema({ query: rootQuery, mutation: rootMutation });
