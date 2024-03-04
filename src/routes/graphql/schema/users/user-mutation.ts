@@ -53,3 +53,58 @@ export const changeUser = {
     });
   },
 };
+
+export const subscribeTo = {
+  type: userType,
+  args: {
+    userId: {
+      type: new GraphQLNonNull(UUIDType),
+    },
+    authorId: {
+      type: new GraphQLNonNull(UUIDType),
+    },
+  },
+  resolve: async (
+    _,
+    { userId, authorId }: { userId: string; authorId: string },
+    context: FastifyInstance,
+  ) => {
+    return await context.prisma.user.update({
+      where: { id: userId },
+      data: {
+        userSubscribedTo: {
+          create: {
+            authorId: authorId,
+          },
+        },
+      },
+    });
+  },
+};
+
+export const unsubscribeFrom = {
+  type: GraphQLBoolean,
+  args: {
+    userId: {
+      type: new GraphQLNonNull(UUIDType),
+    },
+    authorId: {
+      type: new GraphQLNonNull(UUIDType),
+    },
+  },
+  resolve: async (
+    _,
+    { userId, authorId }: { userId: string; authorId: string },
+    context: FastifyInstance,
+  ) => {
+    await context.prisma.subscribersOnAuthors.delete({
+      where: {
+        subscriberId_authorId: {
+          subscriberId: userId,
+          authorId: authorId,
+        },
+      },
+    });
+    return true;
+  },
+};

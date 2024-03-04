@@ -4,7 +4,13 @@ import { posts, post } from './posts/posts-query.js';
 import { users, user } from './users/users-query.js';
 import { profiles, profile } from './profiles/profiles-query.js';
 import { createPost, deletePost, changePost } from './posts/post-mutation.js';
-import { createUser, deleteUser, changeUser } from './users/user-mutation.js';
+import {
+  createUser,
+  deleteUser,
+  changeUser,
+  subscribeTo,
+  unsubscribeFrom,
+} from './users/user-mutation.js';
 import {
   createProfile,
   deleteProfile,
@@ -37,6 +43,8 @@ const rootMutation = new GraphQLObjectType({
     changeUser,
     changePost,
     changeProfile,
+    subscribeTo,
+    unsubscribeFrom,
   },
 });
 
