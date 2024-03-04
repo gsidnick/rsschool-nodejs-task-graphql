@@ -4,6 +4,10 @@ import { createGqlResponseSchema, gqlResponseSchema } from './schemas.js';
 import { graphql, parse, validate } from 'graphql';
 import schema from './schema/schema.js';
 import { Context } from './types/context.js';
+import {
+  getSubscribeToUserLoader,
+  getUserSubscribedToLoader,
+} from './schema/users/user-loader.js';
 
 const plugin: FastifyPluginAsyncTypebox = async (fastify) => {
   fastify.route({
@@ -27,6 +31,8 @@ const plugin: FastifyPluginAsyncTypebox = async (fastify) => {
       const contextValue: Context = {
         prisma: fastify.prisma,
         dataloaders: new WeakMap(),
+        subscribeToUserLoader: getSubscribeToUserLoader(fastify.prisma),
+        userSubscribedToLoader: getUserSubscribedToLoader(fastify.prisma),
       };
 
       const { data, errors } = await graphql({
