@@ -74,9 +74,6 @@ export const newProfileInputType = new GraphQLInputObjectType({
 export const changeProfileInput = new GraphQLInputObjectType({
   name: 'ChangeProfileInput',
   fields: {
-    userId: {
-      type: GraphQLString,
-    },
     memberTypeId: {
       type: GraphQLString,
     },

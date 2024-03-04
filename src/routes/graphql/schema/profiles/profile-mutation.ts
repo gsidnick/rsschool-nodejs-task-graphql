@@ -49,7 +49,7 @@ export const changeProfile = {
   },
   resolve: async (
     _,
-    { id, dto }: { id: string; dto: dtoProfile },
+    { id, dto }: { id: string; dto: Omit<dtoProfile, 'userId'> },
     context: FastifyInstance,
   ) => {
     return await context.prisma.profile.update({
