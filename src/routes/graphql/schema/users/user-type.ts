@@ -12,7 +12,7 @@ import { FastifyInstance } from 'fastify';
 
 export const userType = new GraphQLObjectType({
   name: 'User',
-  fields: {
+  fields: () => ({
     id: {
       type: new GraphQLNonNull(UUIDType),
     },
@@ -50,5 +50,33 @@ export const userType = new GraphQLObjectType({
         return post;
       },
     },
-  },
+    userSubscribedTo: {
+      type: new GraphQLList(userType),
+      resolve: async ({ id }: { id: string }, _, context: FastifyInstance) => {
+        return context.prisma.user.findMany({
+          where: {
+            subscribedToUser: {
+              some: {
+                subscriberId: id,
+              },
+            },
+          },
+        });
+      },
+    },
+    subscribedToUser: {
+      type: new GraphQLList(userType),
+      resolve: async ({ id }: { id: string }, _, context: FastifyInstance) => {
+        return context.prisma.user.findMany({
+          where: {
+            userSubscribedTo: {
+              some: {
+                authorId: id,
+              },
+            },
+          },
+        });
+      },
+    },
+  }),
 });
