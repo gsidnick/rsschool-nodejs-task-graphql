@@ -1,3 +1,4 @@
+import DataLoader from 'dataloader';
 import {
   GraphQLBoolean,
   GraphQLInputObjectType,
@@ -6,6 +7,7 @@ import {
   GraphQLObjectType,
   GraphQLString,
 } from 'graphql';
+import { MemberType } from '@prisma/client';
 import { UUIDType } from '../../types/uuid.js';
 import { memberTypeType, newMemberTypeIdType } from '../member-types/member-type-type.js';
 import { Context } from '../../types/context.js';
@@ -35,19 +37,38 @@ export const profileType = new GraphQLObjectType({
     memberType: {
       type: memberTypeType,
       resolve: async (
-        { memberTypeId }: { memberTypeId: string },
+        source: { memberTypeId: string },
         _,
-        context: Context,
+        { prisma, dataloaders }: Context,
+        info,
       ) => {
-        const memberType = await context.prisma.memberType.findUnique({
-          where: {
-            id: memberTypeId,
-          },
-        });
-        if (memberType === null) {
-          return null;
+        let dl = dataloaders.get(info.fieldNodes) as DataLoader<
+          string,
+          MemberType | undefined
+        >;
+
+        if (!dl) {
+          const batchMemberType = async (ids: ReadonlyArray<string>) => {
+            const memberTypes: MemberType[] = await prisma.memberType.findMany({
+              where: {
+                id: {
+                  in: ids as Array<string>,
+                },
+              },
+            });
+
+            const map = new Map(
+              memberTypes.map((memberType) => [memberType.id, memberType]),
+            );
+
+            return ids.map((id) => map.get(id));
+          };
+
+          dl = new DataLoader(batchMemberType);
+          dataloaders.set(info.fieldNodes, dl);
         }
-        return memberType;
+
+        return dl.load(source.memberTypeId);
       },
     },
   },

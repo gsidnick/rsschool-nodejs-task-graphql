@@ -26,7 +26,7 @@ const plugin: FastifyPluginAsyncTypebox = async (fastify) => {
 
       const contextValue: Context = {
         prisma: fastify.prisma,
-        dataloaders: new WeakMap<WeakKey, []>(),
+        dataloaders: new WeakMap(),
       };
 
       const { data, errors } = await graphql({
