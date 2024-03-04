@@ -5,7 +5,7 @@ import { Context } from '../../types/context.js';
 
 export const users = {
   type: new GraphQLList(userType),
-  resolve: async (_, __, context: Context) => await context.prisma.user.findMany(),
+  resolve: async (_parent, _args, { prisma }: Context) => await prisma.user.findMany(),
 };
 
 export const user = {
@@ -15,8 +15,8 @@ export const user = {
       type: new GraphQLNonNull(UUIDType),
     },
   },
-  resolve: async (_, { id }: { id: string }, context: Context) => {
-    const user = await context.prisma.user.findUnique({
+  resolve: async (_, { id }: { id: string }, { prisma }: Context) => {
+    const user = await prisma.user.findUnique({
       where: {
         id,
       },
