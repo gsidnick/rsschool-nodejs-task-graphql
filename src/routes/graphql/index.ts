@@ -3,6 +3,7 @@ import { FastifyPluginAsyncTypebox } from '@fastify/type-provider-typebox';
 import { createGqlResponseSchema, gqlResponseSchema } from './schemas.js';
 import { graphql, parse, validate } from 'graphql';
 import schema from './schema/schema.js';
+import { Context } from './types/context.js';
 
 const plugin: FastifyPluginAsyncTypebox = async (fastify) => {
   fastify.route({
@@ -23,7 +24,11 @@ const plugin: FastifyPluginAsyncTypebox = async (fastify) => {
         return { errors: validateErrors };
       }
 
-      const contextValue = fastify;
+      const contextValue: Context = {
+        prisma: fastify.prisma,
+        dataloaders: new WeakMap<WeakKey, []>(),
+      };
+
       const { data, errors } = await graphql({
         schema,
         source,

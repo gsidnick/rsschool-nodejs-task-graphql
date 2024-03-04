@@ -1,11 +1,10 @@
-import { FastifyInstance } from 'fastify';
 import { GraphQLList, GraphQLNonNull } from 'graphql';
 import { memberTypeIdType, memberTypeType } from './member-type-type.js';
+import { Context } from '../../types/context.js';
 
 export const memberTypes = {
   type: new GraphQLList(memberTypeType),
-  resolve: async (_, __, context: FastifyInstance) =>
-    await context.prisma.memberType.findMany(),
+  resolve: async (_, __, context: Context) => await context.prisma.memberType.findMany(),
 };
 
 export const memberType = {
@@ -15,7 +14,7 @@ export const memberType = {
       type: new GraphQLNonNull(memberTypeIdType),
     },
   },
-  resolve: async (_, { id }: { id: string }, context: FastifyInstance) => {
+  resolve: async (_, { id }: { id: string }, context: Context) => {
     const memberType = await context.prisma.memberType.findUnique({
       where: {
         id,

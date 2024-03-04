@@ -1,7 +1,7 @@
-import { FastifyInstance } from 'fastify';
 import { GraphQLBoolean, GraphQLNonNull } from 'graphql';
 import { changeUserInput, dtoUser, newUserInputType, userType } from './user-type.js';
 import { UUIDType } from '../../types/uuid.js';
+import { Context } from '../../types/context.js';
 
 export const createUser = {
   type: userType,
@@ -10,7 +10,7 @@ export const createUser = {
       type: new GraphQLNonNull(newUserInputType),
     },
   },
-  resolve: async (_, { dto }: { dto: dtoUser }, context: FastifyInstance) => {
+  resolve: async (_, { dto }: { dto: dtoUser }, context: Context) => {
     return await context.prisma.user.create({ data: dto });
   },
 };
@@ -22,7 +22,7 @@ export const deleteUser = {
       type: new GraphQLNonNull(UUIDType),
     },
   },
-  resolve: async (_, { id }: { id: string }, context: FastifyInstance) => {
+  resolve: async (_, { id }: { id: string }, context: Context) => {
     await context.prisma.user.delete({
       where: {
         id,
@@ -45,7 +45,7 @@ export const changeUser = {
   resolve: async (
     _,
     { id, dto }: { id: string; dto: Partial<dtoUser> },
-    context: FastifyInstance,
+    context: Context,
   ) => {
     return await context.prisma.user.update({
       where: { id },
@@ -67,7 +67,7 @@ export const subscribeTo = {
   resolve: async (
     _,
     { userId, authorId }: { userId: string; authorId: string },
-    context: FastifyInstance,
+    context: Context,
   ) => {
     return await context.prisma.user.update({
       where: { id: userId },
@@ -95,7 +95,7 @@ export const unsubscribeFrom = {
   resolve: async (
     _,
     { userId, authorId }: { userId: string; authorId: string },
-    context: FastifyInstance,
+    context: Context,
   ) => {
     await context.prisma.subscribersOnAuthors.delete({
       where: {

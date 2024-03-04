@@ -1,4 +1,3 @@
-import { FastifyInstance } from 'fastify';
 import { GraphQLBoolean, GraphQLNonNull } from 'graphql';
 import {
   changeProfileInput,
@@ -7,6 +6,7 @@ import {
   profileType,
 } from './profile-type.js';
 import { UUIDType } from '../../types/uuid.js';
+import { Context } from '../../types/context.js';
 
 export const createProfile = {
   type: profileType,
@@ -15,7 +15,7 @@ export const createProfile = {
       type: new GraphQLNonNull(newProfileInputType),
     },
   },
-  resolve: async (_, { dto }: { dto: dtoProfile }, context: FastifyInstance) => {
+  resolve: async (_, { dto }: { dto: dtoProfile }, context: Context) => {
     return await context.prisma.profile.create({ data: dto });
   },
 };
@@ -27,7 +27,7 @@ export const deleteProfile = {
       type: new GraphQLNonNull(UUIDType),
     },
   },
-  resolve: async (_, { id }: { id: string }, context: FastifyInstance) => {
+  resolve: async (_, { id }: { id: string }, context: Context) => {
     await context.prisma.profile.delete({
       where: {
         id,
@@ -50,7 +50,7 @@ export const changeProfile = {
   resolve: async (
     _,
     { id, dto }: { id: string; dto: Omit<dtoProfile, 'userId'> },
-    context: FastifyInstance,
+    context: Context,
   ) => {
     return await context.prisma.profile.update({
       where: { id },

@@ -1,7 +1,7 @@
-import { FastifyInstance } from 'fastify';
 import { postType, newPostInputType, dtoPost, changePostInput } from './post-type.js';
 import { GraphQLBoolean, GraphQLNonNull } from 'graphql';
 import { UUIDType } from '../../types/uuid.js';
+import { Context } from '../../types/context.js';
 
 export const createPost = {
   type: postType,
@@ -10,7 +10,7 @@ export const createPost = {
       type: new GraphQLNonNull(newPostInputType),
     },
   },
-  resolve: async (_, { dto }: { dto: dtoPost }, context: FastifyInstance) => {
+  resolve: async (_, { dto }: { dto: dtoPost }, context: Context) => {
     return await context.prisma.post.create({ data: dto });
   },
 };
@@ -22,7 +22,7 @@ export const deletePost = {
       type: new GraphQLNonNull(UUIDType),
     },
   },
-  resolve: async (_, { id }: { id: string }, context: FastifyInstance) => {
+  resolve: async (_, { id }: { id: string }, context: Context) => {
     await context.prisma.post.delete({
       where: {
         id,
@@ -45,7 +45,7 @@ export const changePost = {
   resolve: async (
     _,
     { id, dto }: { id: string; dto: Partial<dtoPost> },
-    context: FastifyInstance,
+    context: Context,
   ) => {
     return await context.prisma.post.update({
       where: { id },
